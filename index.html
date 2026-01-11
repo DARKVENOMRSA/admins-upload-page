@@ -2,39 +2,57 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>TRS Admin Login</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
+<title>TRS Admin</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <style>
 body{
-  margin:0;
-  background:#020408;
-  color:#e6eaf2;
+  margin:0;background:#020408;color:#e6eaf2;
   font-family:Segoe UI,Roboto,sans-serif;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  height:100vh;
-  padding:20px;
+  display:flex;align-items:center;justify-content:center;height:100vh;
 }
-
 .panel{
-  width:100%;
-  max-width:420px;
-  background:rgba(20,25,40,.9);
-  padding:32px 26px;
-  border-radius:18px;
-  box-shadow:0 0 40px rgba(0,0,0,.9);
-  border:1px solid rgba(255,255,255,.06);
+  width:100%;max-width:420px;background:rgba(20,25,40,.9);
+  padding:32px;border-radius:18px;box-shadow:0 0 40px #000;
 }
+h1{text-align:center;letter-spacing:4px;}
+.sub{text-align:center;color:#8a91a6;margin-bottom:30px;font-size:12px;}
+input{
+  width:100%;padding:14px;margin-bottom:16px;
+  background:#0b1020;border:1px solid #333;border-radius:12px;color:white;
+}
+button{
+  width:100%;padding:14px;border:none;border-radius:12px;
+  background:#1c2335;color:white;font-weight:600;
+}
+#error{color:#ff6b6b;text-align:center;margin-top:10px;}
+</style>
+</head>
+<body>
 
-.logo{
-  text-align:center;
-  font-size:42px;
-  font-weight:700;
-  letter-spacing:3px;
-  margin-bottom:6px;
+<div class="panel">
+<h1>TRS</h1>
+<div class="sub">ADMIN AUTHORIZATION</div>
+<input id="u" placeholder="Username">
+<input id="p" type="password" placeholder="Password">
+<button onclick="login()">ACCESS</button>
+<div id="error"></div>
+</div>
+
+<script>
+const USER="darkvenomrsa";
+const PASS="TRS@2026";
+
+function login(){
+  if(u.value===USER && p.value===PASS){
+    sessionStorage.setItem("trs","1");
+    location="dashboard.html";
+  } else {
+    error.textContent="Invalid login";
+  }
 }
+</script>
+</body>
+</html>}
 
 .sub{
   text-align:center;
