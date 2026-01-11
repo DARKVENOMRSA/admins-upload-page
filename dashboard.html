@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>TRS Admin Dashboard</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+body{
+    background:#000814;
+    color:#00f0ff;
+    font-family:Arial;
+    padding:20px;
+}
+
+h1{
+    text-align:center;
+    text-shadow:0 0 15px cyan;
+}
+
+.panel{
+    max-width:600px;
+    margin:auto;
+    background:#020f1f;
+    padding:20px;
+    border-radius:20px;
+    box-shadow:0 0 30px rgba(0,255,255,.2);
+}
+
+input,button{
+    width:100%;
+    padding:12px;
+    border-radius:10px;
+    border:none;
+    margin-top:10px;
+}
+
+button{
+    background:#00f0ff;
+    color:#00111f;
+    font-weight:bold;
+    cursor:pointer;
+}
+
+.status{
+    margin-top:15px;
+    font-size:14px;
+}
+</style>
+</head>
+
+<body>
+
+<h1>TRS Admin Panel</h1>
+
+<div class="panel">
+    <input type="file" id="file">
+    <input type="text" id="release" placeholder="Release name (e.g MTN-Daily)">
+    <button onclick="upload()">Upload & Publish</button>
+    <div class="status" id="status"></div>
+</div>
+
+<script>
+const OWNER = "DARKVENOMRSA";
+const REPO = "trs-configs";
+
+async function upload(){
+    const file = document.getElementById("file").files[0];
+    const release = document.getElementById("release").value;
+    const status = document.getElementById("status");
+
+    if(!file || !release){
+        status.innerText="Missing file or release name";
+        return;
+    }
+
+    status.innerText="Preparing release...";
+
+    const token = ""; // GitHub Actions will inject token
+
+    status.innerText="Upload ready. Use GitHub Actions trigger.";
+}
+</script>
+
+</body>
+</html>
