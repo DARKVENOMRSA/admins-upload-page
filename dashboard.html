@@ -1,126 +1,75 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>TRS Admin Panel</title>
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TRS Dashboard</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <style>
-body{background:#020408;color:#e6eaf2;font-family:Segoe UI;padding:20px}
-.panel{max-width:520px;margin:auto;background:#0b1020;padding:20px;border-radius:16px}
-input,button{width:100%;padding:14px;margin-top:12px;border-radius:10px;border:none}
-button{background:#1c2335;color:white}
-.status{margin-top:12px;font-size:13px}
+body{margin:0;background:#020408;color:#e6eaf2;font-family:Segoe UI,Roboto,sans-serif;padding:20px}
+h1{text-align:center;margin-bottom:12px}
+.wrap{max-width:700px;margin:auto}
+.card{background:#0b1020;border:1px solid rgba(255,255,255,.06);border-radius:16px;padding:18px;margin-bottom:16px}
+label{font-size:12px;color:#8a91a6}
+input,select,button{width:100%;padding:12px;border-radius:10px;border:1px solid rgba(255,255,255,.08);background:#0f1530;color:#fff;margin-top:8px}
+button{background:linear-gradient(135deg,#1c2335,#2a3550);border:none;font-weight:600}
+.status{font-size:13px;color:#b0b7cc;margin-top:8px}
 </style>
 </head>
 <body>
+<div class="wrap">
+  <h1>TRS Dashboard</h1>
 
-<div class="panel">
-<input type="file" id="file">
-<input id="release" placeholder="Release name">
-<button onclick="send()">Upload</button>
-<div class="status" id="status"></div>
+  <div class="card">
+    <label>VPN Type</label>
+    <select id="vpn">
+      <option>HA Tunnel</option>
+      <option>TLS Tunnel</option>
+      <option>HTTP Custom</option>
+      <option>HTTP Injector</option>
+      <option>ZIVPN</option>
+      <option>Nvp Tunnel</option>
+      <option>OpenTunnel</option>
+      <option>LinkLayer</option>
+      <option>Mina Pro Net</option>
+      <option>NetMod</option>
+      <option>SSH Custom</option>
+      <option>KPN Tunnel Rev</option>
+    </select>
+
+    <label>VPN Config File</label>
+    <input type="file" id="file">
+
+    <label>Release Name</label>
+    <input id="release" placeholder="e.g. MTN-2026-W1">
+
+    <button onclick="upload()">Upload & Publish</button>
+    <div class="status" id="uStatus"></div>
+  </div>
 </div>
 
 <script>
-if(!sessionStorage.getItem("trs")) location="index.html";
+if(!sessionStorage.getItem("trs_user")) location="index.html";
 
 const OWNER="DARKVENOMRSA";
 const REPO="trs-configs";
-
-async function send(){
- const f=file.files[0];
- const r=release.value.trim();
- if(!f||!r){status.innerText="Missing file or release";return;}
-
- const reader=new FileReader();
- reader.onload=async()=>{
-   const base64=reader.result.split(",")[1];
-   status.innerText="Sending…";
-
-   const res=await fetch(`https://api.github.com/repos/${OWNER}/${REPO}/dispatches`,{
-     method:"POST",
-     headers:{"Accept":"application/vnd.github+json"},
-     body:JSON.stringify({
-       event_type:"trs_upload",
-       client_payload:{filename:f.name,content:base64,release:r}
-     })
-   });
-
-   status.innerText=res.ok?"Upload started":"Error "+res.status;
- };
- reader.readAsDataURL(f);
-}
-</script>
-
-</body>
-</html>.status{
-  margin-top:15px;
-  font-size:13px;
-  color:#b0b7cc;
-}
-</style>
-</head>
-
-<body>
-
-<h1>TRS Admin Control</h1>
-
-<div class="panel">
-  <input type="file" id="file">
-  <input id="release" placeholder="Release name (e.g. MTN-Daily)">
-  <button onclick="upload()">Upload & Publish</button>
-  <div class="status" id="status"></div>
-</div>
-
-<script>
-const OWNER="DARKVENOMRSA";
-const REPO="trs-configs";
-const WORKFLOW="admin-upload.yml";
 
 async function upload(){
-  const file=document.getElementById("file").files[0];
-  const release=document.getElementById("release").value.trim();
-  const status=document.getElementById("status");
-
-  if(!file || !release){
-    status.innerText="Select file and release name";
-    return;
-  }
-
-  status.innerText="Encoding file…";
-
+  const f=file.files[0], r=release.value.trim(), v=vpn.value;
+  if(!f||!r){uStatus.textContent="Select file and release";return;}
   const reader=new FileReader();
-  reader.onload=async ()=>{
+  reader.onload=async()=>{
     const base64=reader.result.split(",")[1];
-
-    status.innerText="Sending to GitHub…";
-
-    const res=await fetch(`https://api.github.com/repos/${OWNER}/${REPO}/actions/workflows/${WORKFLOW}/dispatches`,{
+    const tag=v.replace(/\s+/g,"_")+"-"+r;
+    uStatus.textContent="Sending…";
+    const res=await fetch(`https://api.github.com/repos/${OWNER}/${REPO}/dispatches`,{
       method:"POST",
-      headers:{
-        "Accept":"application/vnd.github+json",
-        "Content-Type":"application/json"
-      },
-      body:JSON.stringify({
-        ref:"main",
-        inputs:{
-          filename:file.name,
-          content:base64,
-          release:release
-        }
-      })
+      headers:{"Accept":"application/vnd.github+json"},
+      body:JSON.stringify({event_type:"trs_upload",client_payload:{filename:f.name,content:base64,release:tag}})
     });
-
-    if(res.status===204){
-      status.innerText="Upload started. GitHub is publishing…";
-    }else{
-      status.innerText="Error: "+res.status;
-    }
+    uStatus.textContent = res.ok ? "Publish started on GitHub…" : "Error "+res.status;
   };
-
-  reader.readAsDataURL(file);
+  reader.readAsDataURL(f);
 }
 </script>
-
 </body>
 </html>
