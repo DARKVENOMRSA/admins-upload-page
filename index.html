@@ -3,268 +3,41 @@
 <head>
 <meta charset="UTF-8">
 <title>TRS Admin</title>
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <style>
-body{
-  margin:0;background:#020408;color:#e6eaf2;
-  font-family:Segoe UI,Roboto,sans-serif;
-  display:flex;align-items:center;justify-content:center;height:100vh;
-}
-.panel{
-  width:100%;max-width:420px;background:rgba(20,25,40,.9);
-  padding:32px;border-radius:18px;box-shadow:0 0 40px #000;
-}
-h1{text-align:center;letter-spacing:4px;}
-.sub{text-align:center;color:#8a91a6;margin-bottom:30px;font-size:12px;}
-input{
-  width:100%;padding:14px;margin-bottom:16px;
-  background:#0b1020;border:1px solid #333;border-radius:12px;color:white;
-}
-button{
-  width:100%;padding:14px;border:none;border-radius:12px;
-  background:#1c2335;color:white;font-weight:600;
-}
-#error{color:#ff6b6b;text-align:center;margin-top:10px;}
+body{margin:0;background:#020408;color:#e6eaf2;font-family:Segoe UI,Roboto,sans-serif;display:flex;align-items:center;justify-content:center;height:100vh}
+.panel{width:100%;max-width:420px;background:rgba(20,25,40,.92);padding:32px 26px;border-radius:18px;box-shadow:0 0 40px rgba(0,0,0,.9);border:1px solid rgba(255,255,255,.06)}
+.logo{text-align:center;font-size:42px;letter-spacing:3px;margin-bottom:6px}
+.sub{text-align:center;font-size:11px;color:#8a91a6;letter-spacing:3px;margin-bottom:28px}
+label{font-size:11px;color:#8a91a6;letter-spacing:2px}
+input{width:100%;margin:6px 0 18px;padding:14px;border-radius:12px;border:1px solid rgba(255,255,255,.08);background:#0b1020;color:#fff;font-size:15px}
+button{width:100%;padding:14px;border-radius:12px;border:none;background:linear-gradient(135deg,#1c2335,#2a3550);color:#fff;font-weight:600;letter-spacing:1px}
+#error{margin-top:14px;font-size:13px;color:#ff6b6b;text-align:center}
 </style>
 </head>
 <body>
-
-<div class="panel">
-<h1>TRS</h1>
-<div class="sub">ADMIN AUTHORIZATION</div>
-<input id="u" placeholder="Username">
-<input id="p" type="password" placeholder="Password">
-<button onclick="login()">ACCESS</button>
-<div id="error"></div>
-</div>
-
-<script>
-const USER="darkvenomrsa";
-const PASS="TRS@2026";
-
-function login(){
-  if(u.value===USER && p.value===PASS){
-    sessionStorage.setItem("trs","1");
-    location="dashboard.html";
-  } else {
-    error.textContent="Invalid login";
-  }
-}
-</script>
-</body>
-</html>}
-
-.sub{
-  text-align:center;
-  font-size:11px;
-  color:#7c8399;
-  letter-spacing:3px;
-  margin-bottom:28px;
-}
-
-label{
-  font-size:11px;
-  letter-spacing:2px;
-  color:#8a91a6;
-}
-
-input{
-  width:100%;
-  margin-top:6px;
-  margin-bottom:18px;
-  padding:14px;
-  border-radius:12px;
-  border:1px solid rgba(255,255,255,.08);
-  background:#0b1020;
-  color:#fff;
-  font-size:15px;
-}
-
-input::placeholder{
-  color:#6d7488;
-}
-
-button{
-  width:100%;
-  padding:14px;
-  border-radius:12px;
-  border:none;
-  background:linear-gradient(135deg,#1c2335,#2a3550);
-  color:#fff;
-  font-weight:600;
-  letter-spacing:1px;
-  box-shadow:0 0 15px rgba(0,0,0,.8);
-}
-
-#error{
-  margin-top:14px;
-  font-size:13px;
-  color:#ff6b6b;
-  text-align:center;
-}
-</style>
-</head>
-
-<body>
-
 <div class="panel">
   <div class="logo">TRS</div>
   <div class="sub">ADMIN AUTHORIZATION</div>
-
   <label>USERNAME</label>
   <input id="user" placeholder="Admin ID">
-
   <label>PASSWORD</label>
   <input id="pass" type="password" placeholder="••••••••">
-
   <button onclick="login()">ACCESS SYSTEM</button>
-
   <div id="error"></div>
 </div>
-
 <script>
-const USERNAME="darkvenomrsa";
-const PASSWORD="TRS@2026";
-
+const MASTERS=["DARKVENOMRSA","implayboyrsa"];
+const PASS="TRS@2026";
 function login(){
-  const u=document.getElementById("user").value.trim();
-  const p=document.getElementById("pass").value;
-  const err=document.getElementById("error");
-
-  if(u===USERNAME && p===PASSWORD){
-    window.location.href="dashboard.html";
-  }else{
-    err.textContent="Invalid credentials";
+  if(MASTERS.includes(user.value.trim()) && pass.value===PASS){
+    sessionStorage.setItem("trs_user",user.value.trim());
+    sessionStorage.setItem("trs_role","master");
+    location="dashboard.html";
+  } else {
+    error.textContent="Invalid credentials";
   }
 }
 </script>
-
-</body>
-</html>
-.login-box{
-    position:relative;
-    z-index:1;
-    width:90%;
-    max-width:380px;
-    background:rgba(0,10,25,.9);
-    border-radius:24px;
-    padding:40px 28px;
-    box-shadow:0 0 40px rgba(0,255,255,.25);
-    text-align:center;
-}
-
-.logo{
-    font-size:48px;
-    color:#00f0ff;
-    text-shadow:0 0 20px #00f0ff;
-    margin-bottom:8px;
-}
-
-.subtitle{
-    color:#7deaff;
-    font-size:12px;
-    letter-spacing:4px;
-    margin-bottom:30px;
-}
-
-.field{
-    text-align:left;
-    margin-bottom:20px;
-}
-
-.field label{
-    color:#6ddcff;
-    font-size:12px;
-    margin-bottom:6px;
-    display:block;
-}
-
-.field input{
-    width:100%;
-    padding:14px;
-    border-radius:12px;
-    border:none;
-    outline:none;
-    background:#020f1f;
-    color:#00f0ff;
-    font-size:14px;
-    box-shadow:inset 0 0 8px rgba(0,255,255,.2);
-}
-
-.btn{
-    margin-top:10px;
-    width:100%;
-    padding:16px;
-    border:none;
-    border-radius:14px;
-    background:linear-gradient(90deg,#00f0ff,#008cff);
-    color:#00111f;
-    font-weight:bold;
-    font-size:16px;
-    cursor:pointer;
-    box-shadow:0 0 25px rgba(0,255,255,.6);
-    transition:.3s;
-}
-
-.btn:hover{
-    transform:scale(1.04);
-}
-
-.error{
-    color:#ff4c4c;
-    margin-top:12px;
-    font-size:13px;
-    display:none;
-}
-
-.footer{
-    margin-top:25px;
-    font-size:11px;
-    color:#5fb7d6;
-}
-</style>
-</head>
-
-<body>
-
-<div class="glow-bg"></div>
-
-<div class="login-box">
-    <div class="logo">TRS</div>
-    <div class="subtitle">ADMIN AUTHORIZATION</div>
-
-    <div class="field">
-        <label>USERNAME</label>
-        <input id="user" type="text" autocomplete="off">
-    </div>
-
-    <div class="field">
-        <label>PASSWORD</label>
-        <input id="pass" type="password">
-    </div>
-
-    <button class="btn" onclick="login()">ACCESS SYSTEM</button>
-    <div class="error" id="msg">Invalid login</div>
-
-    <div class="footer">TRS Secure Infrastructure</div>
-</div>
-
-<script>
-const USERNAME = "darkvenomrsa";
-const PASSWORD = "TRS@2026";
-
-function login(){
-    const u = document.getElementById("user").value;
-    const p = document.getElementById("pass").value;
-    const msg = document.getElementById("msg");
-
-    if(u === USERNAME && p === PASSWORD){
-        window.location.href = "dashboard.html";
-    } else {
-        msg.style.display="block";
-    }
-}
-</script>
-
 </body>
 </html>
