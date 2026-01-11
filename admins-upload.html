@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>TRS Upload</title>
+
+<style>
+body{
+    background:#020612;
+    color:#0ff;
+    font-family:Arial;
+    padding:30px;
+}
+.panel{
+    background:#0a1220;
+    padding:30px;
+    border-radius:12px;
+    box-shadow:0 0 40px #00f;
+    max-width:500px;
+    margin:auto;
+}
+input,button{
+    width:100%;
+    padding:12px;
+    margin-top:10px;
+    background:#000;
+    color:#0ff;
+    border:1px solid #00f;
+}
+button{
+    background:#00f;
+    color:#fff;
+    cursor:pointer;
+}
+#status{
+    margin-top:15px;
+}
+</style>
+</head>
+
+<body>
+<div class="panel">
+    <h2>TRS Config Uploader</h2>
+    <input type="file" id="file">
+    <button onclick="upload()">UPLOAD TO GITHUB</button>
+    <div id="status"></div>
+</div>
+
+<script>
+if(sessionStorage.getItem("trs_admin")!=="yes"){
+    location="admins-login.html";
+}
+
+const REPO="DARKVENOMRSA/trs-configs";
+const WORKFLOW="admin-upload.yml";
+
+async function upload(){
+    const file=document.getElementById("file").files[0];
+    if(!file) return alert("Select file");
+
+    status.innerText="Encoding file...";
+
+    const buf=await file.arrayBuffer();
+    const b64=btoa(String.fromCharCode(...new Uint8Array(buf)));
+
+    status.innerText="Uploading to GitHub...";
+
+    const r=await fetch(
+      `https://api.github.com/repos/${REPO}/actions/workflows/${WORKFLOW}/dispatches`,
+      {
+        method:"POST",
+        headers:{
+          "Accept":"application/vnd.github+json"
+        },
+        body:JSON.stringify({
+          ref:"main",
+          inputs:{
+            filename:file.name,
+            content:b64
+          }
+        })
+      }
+    );
+
+    if(r.status===204){
+        status.innerHTML="✅ Uploaded! GitHub is creating release...";
+    }else{
+        status.innerHTML="❌ Error: "+r.status;
+    }
+}
+</script>
+</body>
+</html>
