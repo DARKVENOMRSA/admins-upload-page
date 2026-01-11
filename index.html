@@ -3,130 +3,178 @@
 <head>
 <meta charset="UTF-8">
 <title>TRS Admin</title>
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script src="https://cdn.jsdelivr.net/npm/bcryptjs@2.4.3/dist/bcrypt.min.js"></script>
 
 <style>
-*{
-  margin:0;
-  padding:0;
-  box-sizing:border-box;
-  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
-}
+*{box-sizing:border-box;font-family:'Segoe UI',sans-serif;}
 
 body{
+  margin:0;
   height:100vh;
-  background:linear-gradient(180deg,#060b14,#000);
-  color:white;
-}
-
-.app{
-  height:100%;
+  background:
+  radial-gradient(circle at top,#002a44,#000814);
   display:flex;
-  flex-direction:column;
-  justify-content:space-between;
-  padding:40px 22px 50px;
+  align-items:center;
+  justify-content:center;
+  overflow:hidden;
 }
 
-.header{
+/* Animated background glow */
+body::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:
+  radial-gradient(circle at 20% 30%,#00ffff33,transparent 50%),
+  radial-gradient(circle at 80% 70%,#0066ff33,transparent 50%);
+  animation:move 10s infinite alternate;
+}
+@keyframes move{
+  from{transform:translateY(-10px);}
+  to{transform:translateY(10px);}
+}
+
+.panel{
+  position:relative;
+  width:92%;
+  max-width:420px;
+  background:rgba(0,10,25,0.85);
+  backdrop-filter:blur(15px);
+  border-radius:25px;
+  padding:35px;
+  box-shadow:0 0 50px #00ffff55;
   text-align:center;
-  margin-top:20px;
+  animation:fadeIn 1s ease;
+}
+
+@keyframes fadeIn{
+  from{opacity:0; transform:translateY(20px);}
+  to{opacity:1;}
 }
 
 .logo{
-  font-size:3.8rem;
-  font-weight:900;
-  letter-spacing:4px;
-  background:linear-gradient(45deg,#00ffd5,#0099ff);
-  -webkit-background-clip:text;
-  -webkit-text-fill-color:transparent;
+  font-size:52px;
+  color:#00ffff;
+  text-shadow:0 0 30px #00ffff;
+  letter-spacing:6px;
 }
 
 .sub{
-  font-size:0.85rem;
-  letter-spacing:3px;
-  color:#7aaeff;
-  margin-top:6px;
-}
-
-.center{
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  justify-content:center;
-}
-
-.ring{
-  width:100px;
-  height:100px;
-  border-radius:50%;
-  border:5px solid rgba(255,255,255,.08);
-  border-top:5px solid #00ffd5;
-  animation:spin 1s linear infinite;
+  color:#66f2ff;
+  letter-spacing:4px;
+  font-size:12px;
   margin-bottom:30px;
 }
 
-.status{
-  font-size:0.85rem;
+label{
+  color:#88e9ff;
+  display:block;
+  text-align:left;
+  margin-top:15px;
+  font-size:13px;
   letter-spacing:2px;
-  color:#00ffd5;
+}
+
+input{
+  width:100%;
+  padding:14px;
+  border-radius:12px;
+  border:1px solid #00ffff33;
+  background:rgba(0,20,40,0.8);
+  color:#00ffff;
+  font-size:16px;
+  outline:none;
+  margin-top:8px;
+  box-shadow:inset 0 0 10px #00ffff22;
+}
+
+input:focus{
+  border-color:#00ffff;
+  box-shadow:0 0 15px #00ffff;
+}
+
+button{
+  width:100%;
+  margin-top:30px;
+  padding:16px;
+  border-radius:18px;
+  border:none;
+  background:linear-gradient(135deg,#00ffff,#0088ff);
+  color:#001;
+  font-size:18px;
+  font-weight:bold;
+  letter-spacing:2px;
+  box-shadow:0 0 30px #00ffff;
+  cursor:pointer;
+  transition:0.2s;
+}
+
+button:hover{
+  box-shadow:0 0 60px #00ffff;
+  transform:scale(1.03);
+}
+
+#error{
+  margin-top:18px;
+  color:#ff4d4d;
+  font-size:14px;
+  min-height:20px;
 }
 
 .footer{
-  text-align:center;
-  font-size:0.7rem;
-  color:#666;
-  letter-spacing:1px;
-}
-
-@keyframes spin{
-  to{transform:rotate(360deg);}
+  margin-top:20px;
+  font-size:11px;
+  color:#66f2ff88;
+  letter-spacing:2px;
 }
 </style>
 </head>
 
 <body>
 
-<div class="app">
-  <div class="header">
-    <div class="logo">TRS</div>
-    <div class="sub">ADMIN PANEL</div>
-  </div>
-
-  <div class="center">
-    <div class="ring"></div>
-    <div class="status">CONNECTING…</div>
-  </div>
-
-  <div class="footer">
-    Secure Control System
-  </div>
-</div>
-
-<script>
-setTimeout(()=>{
-  location.href="admins-login.html";
-},1800);
-</script>
-
-</body>
-</html>  to{ opacity:1; transform:scale(1); }
-}
-</style>
-</head>
-
-<body>
-
-<div class="container">
+<div class="panel">
   <div class="logo">TRS</div>
-  <div class="sub">ADMIN CONTROL PANEL</div>
-  <div class="loader"></div>
-  <div class="status">INITIALIZING SYSTEM…</div>
+  <div class="sub">ADMIN AUTHORIZATION</div>
+
+  <label>USERNAME</label>
+  <input id="user">
+
+  <label>PASSWORD</label>
+  <input id="pass" type="password">
+
+  <button onclick="login()">ACCESS SYSTEM</button>
+
+  <div id="error"></div>
+
+  <div class="footer">TRS Secure Infrastructure</div>
 </div>
 
 <script>
-setTimeout(()=>{
-  window.location.href="admins-login.html";
-},1800);
+const USERNAME="darkvenomrsa";
+const HASH="$2a$15$r/DVR5tlhAXu9lDzoKv.YOgKy5Rnl82oN5lkw8UlN/Z3GTBSkLoOq";
+
+function login(){
+  const u=document.getElementById("user").value.trim();
+  const p=document.getElementById("pass").value;
+  const err=document.getElementById("error");
+  err.innerText="";
+
+  if(u!==USERNAME){
+    err.innerText="Invalid username";
+    return;
+  }
+
+  bcrypt.compare(p,HASH,(e,ok)=>{
+    if(ok){
+      sessionStorage.setItem("trs_admin","true");
+      window.location="admins-upload.html";
+    }else{
+      err.innerText="Wrong password";
+    }
+  });
+}
 </script>
 
 </body>
