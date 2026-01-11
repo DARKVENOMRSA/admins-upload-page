@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>TRS Admin Login</title>
+<script src="https://cdn.jsdelivr.net/npm/bcryptjs@2.4.3/dist/bcrypt.min.js"></script>
+
+<style>
+body{
+    background:#050b14;
+    color:#0ff;
+    font-family:Arial;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    height:100vh;
+}
+.box{
+    background:#0a1220;
+    padding:40px;
+    border-radius:10px;
+    width:300px;
+    box-shadow:0 0 30px #00f;
+    text-align:center;
+}
+input{
+    width:100%;
+    padding:10px;
+    margin:10px 0;
+    background:#000;
+    color:#0ff;
+    border:1px solid #00f;
+}
+button{
+    background:#00f;
+    color:#fff;
+    border:none;
+    padding:10px;
+    width:100%;
+    cursor:pointer;
+}
+</style>
+</head>
+
+<body>
+<div class="box">
+    <h2>TRS ADMIN</h2>
+    <input id="user" placeholder="Username">
+    <input id="pass" type="password" placeholder="Password">
+    <button onclick="login()">LOGIN</button>
+    <p id="msg"></p>
+</div>
+
+<script>
+const USER="darkvenomrsa";
+const HASH="$2a$15$r/DVR5tlhAXu9lDzoKv.YOgKy5Rnl82oN5lkw8UlN/Z3GTBSkLoOq";
+
+function login(){
+    let u=document.getElementById("user").value;
+    let p=document.getElementById("pass").value;
+
+    if(u!==USER){
+        msg.innerText="Wrong username";
+        return;
+    }
+
+    bcrypt.compare(p, HASH, function(err, ok){
+        if(ok){
+            sessionStorage.setItem("trs_admin","yes");
+            window.location="admins-upload.html";
+        }else{
+            msg.innerText="Wrong password";
+        }
+    });
+}
+</script>
+</body>
+</html>
