@@ -1,74 +1,171 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>TRS Admin Login</title>
-<script src="https://cdn.jsdelivr.net/npm/bcryptjs@2.4.3/dist/bcrypt.min.js"></script>
+<title>TRS Secure Login</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
 
 <style>
+:root{
+  --bg:#060b14;
+  --card:#0b1220;
+  --neon:#00ffd5;
+  --blue:#0099ff;
+}
+
+*{
+  box-sizing:border-box;
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+}
+
 body{
-    background:#050b14;
-    color:#0ff;
-    font-family:Arial;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    height:100vh;
+  margin:0;
+  height:100vh;
+  background:
+    radial-gradient(circle at top, #0a1225, #000 70%);
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  color:white;
 }
-.box{
-    background:#0a1220;
-    padding:40px;
-    border-radius:10px;
-    width:300px;
-    box-shadow:0 0 30px #00f;
-    text-align:center;
+
+.login-card{
+  width:100%;
+  max-width:380px;
+  background:linear-gradient(180deg,#0b1220,#05070f);
+  border-radius:24px;
+  padding:42px 28px;
+  box-shadow:
+    0 0 60px rgba(0,255,213,.15),
+    inset 0 0 40px rgba(0,255,213,.03);
 }
+
+.logo{
+  text-align:center;
+  font-size:3.4rem;
+  font-weight:900;
+  letter-spacing:4px;
+  background:linear-gradient(45deg,var(--neon),var(--blue));
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+}
+
+.sub{
+  text-align:center;
+  margin-top:6px;
+  font-size:.75rem;
+  letter-spacing:3px;
+  color:#7aaeff;
+  margin-bottom:36px;
+}
+
+.group{
+  margin-bottom:18px;
+}
+
+label{
+  font-size:.65rem;
+  color:#7aaeff;
+  letter-spacing:2px;
+}
+
 input{
-    width:100%;
-    padding:10px;
-    margin:10px 0;
-    background:#000;
-    color:#0ff;
-    border:1px solid #00f;
+  width:100%;
+  margin-top:6px;
+  padding:16px;
+  border-radius:14px;
+  background:#050b14;
+  border:1px solid rgba(0,255,213,.15);
+  color:white;
+  font-size:1rem;
+  outline:none;
 }
+
+input:focus{
+  border-color:var(--neon);
+  box-shadow:0 0 12px rgba(0,255,213,.4);
+}
+
 button{
-    background:#00f;
-    color:#fff;
-    border:none;
-    padding:10px;
-    width:100%;
-    cursor:pointer;
+  width:100%;
+  margin-top:26px;
+  padding:16px;
+  border:none;
+  border-radius:18px;
+  background:linear-gradient(45deg,var(--neon),var(--blue));
+  color:#001018;
+  font-weight:800;
+  letter-spacing:2px;
+  cursor:pointer;
+  box-shadow:0 0 20px rgba(0,255,213,.6);
+}
+
+button:active{
+  transform:scale(.97);
+}
+
+#error{
+  margin-top:20px;
+  text-align:center;
+  font-size:.75rem;
+  letter-spacing:1px;
+  color:#ff6b6b;
 }
 </style>
 </head>
 
 <body>
-<div class="box">
-    <h2>TRS ADMIN</h2>
-    <input id="user" placeholder="Username">
-    <input id="pass" type="password" placeholder="Password">
-    <button onclick="login()">LOGIN</button>
-    <p id="msg"></p>
+
+<div class="login-card">
+  <div class="logo">TRS</div>
+  <div class="sub">ADMIN AUTHORIZATION</div>
+
+  <div class="group">
+    <label>USERNAME</label>
+    <input id="user" autocomplete="off">
+  </div>
+
+  <div class="group">
+    <label>PASSWORD</label>
+    <input id="pass" type="password">
+  </div>
+
+  <button onclick="login()">ACCESS SYSTEM</button>
+  <div id="error"></div>
 </div>
 
 <script>
 const USER="darkvenomrsa";
-const HASH="$2a$15$r/DVR5tlhAXu9lDzoKv.YOgKy5Rnl82oN5lkw8UlN/Z3GTBSkLoOq";
+const HASH="c1b87c1d8e4a5b0f6e0a7fdb2e4d4fcb1a3a11e4c7e3b20c8c6b7b0b5df6f7aa";
 
-function login(){
-    let u=document.getElementById("user").value;
-    let p=document.getElementById("pass").value;
+async function sha256(msg){
+  const buf=new TextEncoder().encode(msg);
+  const hash=await crypto.subtle.digest("SHA-256",buf);
+  return Array.from(new Uint8Array(hash)).map(b=>b.toString(16).padStart(2,"0")).join("");
+}
 
-    if(u!==USER){
-        msg.innerText="Wrong username";
-        return;
-    }
+async function login(){
+  const u=user.value;
+  const p=pass.value;
 
-    bcrypt.compare(p, HASH, function(err, ok){
-        if(ok){
-            sessionStorage.setItem("trs_admin","yes");
-            window.location="admins-upload.html";
-        }else{
+  if(u!==USER){
+    error.innerText="ACCESS DENIED";
+    return;
+  }
+
+  const h=await sha256(p);
+
+  if(h===HASH){
+    sessionStorage.setItem("trs_admin","true");
+    location="admins-upload.html";
+  }else{
+    error.innerText="ACCESS DENIED";
+  }
+}
+</script>
+
+</body>
+</html>        }else{
             msg.innerText="Wrong password";
         }
     });
