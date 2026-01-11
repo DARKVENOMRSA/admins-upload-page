@@ -5,36 +5,124 @@
 <title>TRS Admin Login</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600&display=swap" rel="stylesheet">
-
 <style>
-*{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
-    font-family:'Orbitron',sans-serif;
-}
-
 body{
-    min-height:100vh;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    background:radial-gradient(circle at top,#061a2d,#000814);
-    overflow:hidden;
+  margin:0;
+  background:#020408;
+  color:#e6eaf2;
+  font-family:Segoe UI,Roboto,sans-serif;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  height:100vh;
+  padding:20px;
 }
 
-.glow-bg{
-    position:absolute;
-    width:100%;
-    height:100%;
-    background:
-      radial-gradient(circle at 20% 30%,rgba(0,255,255,.15),transparent 40%),
-      radial-gradient(circle at 80% 70%,rgba(0,140,255,.12),transparent 40%);
-    filter:blur(60px);
-    z-index:0;
+.panel{
+  width:100%;
+  max-width:420px;
+  background:rgba(20,25,40,.9);
+  padding:32px 26px;
+  border-radius:18px;
+  box-shadow:0 0 40px rgba(0,0,0,.9);
+  border:1px solid rgba(255,255,255,.06);
 }
 
+.logo{
+  text-align:center;
+  font-size:42px;
+  font-weight:700;
+  letter-spacing:3px;
+  margin-bottom:6px;
+}
+
+.sub{
+  text-align:center;
+  font-size:11px;
+  color:#7c8399;
+  letter-spacing:3px;
+  margin-bottom:28px;
+}
+
+label{
+  font-size:11px;
+  letter-spacing:2px;
+  color:#8a91a6;
+}
+
+input{
+  width:100%;
+  margin-top:6px;
+  margin-bottom:18px;
+  padding:14px;
+  border-radius:12px;
+  border:1px solid rgba(255,255,255,.08);
+  background:#0b1020;
+  color:#fff;
+  font-size:15px;
+}
+
+input::placeholder{
+  color:#6d7488;
+}
+
+button{
+  width:100%;
+  padding:14px;
+  border-radius:12px;
+  border:none;
+  background:linear-gradient(135deg,#1c2335,#2a3550);
+  color:#fff;
+  font-weight:600;
+  letter-spacing:1px;
+  box-shadow:0 0 15px rgba(0,0,0,.8);
+}
+
+#error{
+  margin-top:14px;
+  font-size:13px;
+  color:#ff6b6b;
+  text-align:center;
+}
+</style>
+</head>
+
+<body>
+
+<div class="panel">
+  <div class="logo">TRS</div>
+  <div class="sub">ADMIN AUTHORIZATION</div>
+
+  <label>USERNAME</label>
+  <input id="user" placeholder="Admin ID">
+
+  <label>PASSWORD</label>
+  <input id="pass" type="password" placeholder="••••••••">
+
+  <button onclick="login()">ACCESS SYSTEM</button>
+
+  <div id="error"></div>
+</div>
+
+<script>
+const USERNAME="darkvenomrsa";
+const PASSWORD="TRS@2026";
+
+function login(){
+  const u=document.getElementById("user").value.trim();
+  const p=document.getElementById("pass").value;
+  const err=document.getElementById("error");
+
+  if(u===USERNAME && p===PASSWORD){
+    window.location.href="dashboard.html";
+  }else{
+    err.textContent="Invalid credentials";
+  }
+}
+</script>
+
+</body>
+</html>
 .login-box{
     position:relative;
     z-index:1;
